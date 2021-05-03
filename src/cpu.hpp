@@ -1,19 +1,22 @@
 #include <cstdint>
+#include <random>
 
 #include "memory.hpp"
 #include "display.hpp"
+#include "keyboard.hpp"
 
 class CPU{
 private:
-    Memory memory;   // Memory Instance
-    Display display; // Display Instance
+    Memory* memory;     // Memory Pointer
+    Display* display;   // Display Pointer
+    Keyboard* keyboard; // Keyboard Pointer
 
     void execute(uint16_t instruction);
 
 public:
     // -----REGISTERS-----
     // General Purpose Registers
-    uint8_t V[0xF];
+    uint8_t V[16];
     // 16 Bit Register I
     uint16_t I;
     // Special Purpose Registers (Get Decremented At 60hz If Not 0)
@@ -26,6 +29,8 @@ public:
     uint16_t stack[16]; // Stores the address that the interpreter should return to after completing a subroutine (max. 16 nested subroutines)
 
     // Public Functions
-    CPU();
+    CPU(Memory* memory, Display* display, Keyboard* keyboard);
+
     void step();
+    void decrementTimers();
 };

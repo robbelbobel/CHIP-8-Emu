@@ -3,6 +3,8 @@
 
 #include "emulator.hpp"
 
+#define EMULATION_SPEED 500 // Emulation Speed In Hz
+
 // Function Declarations
 void getInput(bool &running);
 
@@ -31,7 +33,7 @@ int main(){
     }
 
     // -----VARIABLES-----
-    Emulator emulator;
+    Emulator emulator(EMULATION_SPEED);
     bool running = true;
 
     while(running){

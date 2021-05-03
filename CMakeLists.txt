@@ -11,6 +11,7 @@ add_executable(${PROJECT_NAME}
                 src/display.cpp
                 src/emulator.cpp
                 src/memory.cpp
+                src/keyboard.cpp
                 )
 
 find_package(SDL2 REQUIRED)
