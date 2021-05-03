@@ -17,6 +17,7 @@ void CPU::execute(uint16_t instruction){
     // CLS - Clear The Screen
     if(instruction == 0x00E0){
         CPU::display -> clear();
+        CPU::PC += 2; // Increment Program Counter
     }
 
     // RET - Return From Subroutine
@@ -40,32 +41,34 @@ void CPU::execute(uint16_t instruction){
     // SE - Skip next instruction if Vx = kk (3xkk)
     if((instruction & 0xF000) == 0x3000){
         if(CPU::V[(instruction & 0x0F00) >> 12] == (instruction & 0x00FF)){
-            CPU::PC += 2;
+            CPU::PC += 4;
         }
     }
 
     // SNE - Skip next instruction if Vx != kk (4xkk)
     if((instruction & 0xF000) == 0x4000){
         if(!(CPU::V[(instruction & 0x0F00) >> 12] == (instruction & 0x00FF))){
-            CPU::PC += 2;
+            CPU::PC += 4;
         }
     }
 
     // SE - Skip Next Instruction if Vx = Vy (5xy0)
     if((instruction & 0xF000) == 0x5000){
         if((CPU::V[(instruction & 0x0F00)] >> 12) == (CPU::V[(instruction & 0x00F0)] >> 8)){
-            CPU::PC += 2;
+            CPU::PC += 4;
         }
     }
 
     // LD - Set Vx == kk (6xkk)
     if((instruction & 0xF000) == 0x6000){
         CPU::V[(instruction & 0x0F00) >> 12] = (instruction & 0x00FF);
+        CPU::PC += 2; // Increment Program Counter
     }
 
     // ADD - Set Vx = Vx + kk (7xkk)
     if((instruction & 0xF000) == 0x7000){
-        CPU::V[(instruction & 0x0F00) >> 12] += (instruction & 0x00FF); 
+        CPU::V[(instruction & 0x0F00) >> 12] += (instruction & 0x00FF);
+        CPU::PC += 2; // Increment Program Counter
     }
 
     if((instruction & 0xF000) == 0x8000){
@@ -150,13 +153,14 @@ void CPU::execute(uint16_t instruction){
     // SNE - Skip next instruction if Vx != Vy (9xy0)
     if((instruction & 0xF000) == 0x9000){
         if(!(CPU::V[(instruction & 0x0F00) >> 12] == CPU::V[(instruction & 0x00F0) >> 8])){
-            CPU::PC += 2;
+            CPU::PC += 4;
         }
     }
 
     // LD - Set I = nnn (Annn)
     if((instruction & 0xF000) == 0xA000){
         CPU::I = (instruction & 0x0FFF);
+        CPU::PC += 2; // Increment Program Counter
     }
 
     // JP - Jump to location nnn + V0 (Bnnn)
@@ -168,25 +172,27 @@ void CPU::execute(uint16_t instruction){
     if((instruction & 0xF000) == 0xC000){
         char random = rand() % 256;
         CPU::V[(instruction & 0x0F00) >> 12] = random & (instruction & 0x00FF);
+        CPU::PC += 2; // Increment Program Counter
     }
 
     // DRW - Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision (Dxyn)
     if((instruction & 0xF000) == 0xD000){
         CPU::display -> drawSprite(CPU::I, CPU::V[(instruction & 0x0F00) >> 12], CPU::V[(instruction & 0x00F0) >> 8], instruction & 0x000F);
+        CPU::PC += 2; // Increment Program Counter
     }
 
     if((instruction & 0xF000) == 0xE000){
         // SKP - Skip next instruction if key with the value of Vx is pressed (Ex9E)
         if((instruction & 0x00FF) == 0x009E){
             if(CPU::keyboard -> isPressed(CPU::V[(instruction & 0x0F00) >> 12])){
-                CPU::PC += 2;
+                CPU::PC += 4;
             }
         }
 
         // SKNP - Skip next instruction if key with the value of Vx is not pressed (ExA1)
         if((instruction & 0x00FF) == 0x00A1){
             if(!(CPU::keyboard -> isPressed(CPU::V[(instruction & 0x0F00) >> 12]))){
-                CPU::PC += 2;
+                CPU::PC += 4;
             }
         }
     }
@@ -195,54 +201,59 @@ void CPU::execute(uint16_t instruction){
         // LD - Set Vx = delay timer value (Fx07)
         if((instruction & 0x00FF) == 0x0007){
             CPU::V[(instruction & 0x0F00) >> 12] = CPU::DT;
+            CPU::PC += 2; // Increment Program Counter
         }
         
         // LD - Wait for a key press, store the value of the key in Vx (Fx0A)
         if((instruction & 0x00FF) == 0x000A){
             uint8_t pressedButton = CPU::keyboard -> anyPressed();
-            if(pressedButton > 0xf){
-                CPU::PC -= 2;
-            }else{
+            if(!(pressedButton > 0xf)){
                 CPU::V[(instruction & 0x0F00) >> 12] = pressedButton;
+                CPU::PC += 2; // Increment Program Counter
             }
         }
 
         // LD - Set delay timer = Vx (Fx15)
         if((instruction & 0x00FF) == 0x0015){
             CPU::DT = CPU::V[(instruction & 0x0F00) >> 12];
+            CPU::PC += 2; // Increment Program Counter
         }
 
         // LD - Set sound timer = Vx (Fx18)
         if((instruction & 0x00FF) == 0x0018){
             CPU::ST = CPU::V[(instruction & 0x0F00) >> 12];
+            CPU::PC += 2; // Increment Program Counter
         }
 
         // ADD - Set I = I + Vx (Fx1E)
         if((instruction & 0x00FF) == 0x001E){
             CPU::I += CPU::V[(instruction & 0X0F00) >> 12];
+            CPU::PC += 2; // Increment Program Counter
         }
 
         // LD - Set I = location of sprite for digit Vx (Fx29)
         if((instruction & 0x00FF) == 0x0029){
-            // TO BE ADDED
+            CPU::I = (CPU::V[(instruction & 0x0F00) >> 12] * 0x5);
+            CPU::PC += 2; // Increment Program Counter
         }
 
         // LD - Store BCD representation of Vx in memory locations I, I+1, and I+2 (Fx33)
         if((instruction & 0x00FF) == 0x0033){
             // TO BE ADDED
+            CPU::PC += 2; // Increment Program Counter
         }
 
         // LD - Store registers V0 through Vx in memory starting at location I (Fx55)
         if((instruction & 0x00FF) == 0x0055){
             // TO BE ADDED
+            CPU::PC += 2; // Increment Program Counter
         }
 
         // LD - Read registers V0 through Vx from memory starting at location I (Fx65)
         if((instruction & 0x00FF) == 0x0065){
             // TO BE ADDED
+            CPU::PC += 2; // Increment Program Counter
         }
-
-
     }
 }
 
@@ -253,8 +264,6 @@ void CPU::step(){
 
     uint16_t instruction = (signByte << 8) + insignByte; // Combine Bytes To 2 Byte Instruction
     CPU::execute(instruction); // Execute Instruction
-
-    CPU::PC += 2; // Increment Program Counter
 }
 
 void CPU::decrementTimers(){

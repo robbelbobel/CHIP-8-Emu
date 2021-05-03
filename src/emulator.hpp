@@ -1,3 +1,5 @@
+#include <fstream>
+
 #include "cpu.hpp"
 
 class Emulator{
@@ -8,6 +10,8 @@ class Emulator{
         Keyboard* keyboard; // Keyboard Instance
         
         unsigned int speed;
+
+        bool loadGame(const char* path);
 
     public:
         Emulator(unsigned int speed);
