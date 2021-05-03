@@ -1,6 +1,8 @@
 #include <iostream>
 #include <SDL.h>
 
+#include "emulator.hpp"
+
 // Function Declarations
 void getInput(bool &running);
 
@@ -29,6 +31,7 @@ int main(){
     }
 
     // -----VARIABLES-----
+    Emulator emulator;
     bool running = true;
 
     while(running){
@@ -38,6 +41,7 @@ int main(){
         // Get Input
         getInput(running);
 
+        // Update Window
         SDL_UpdateWindowSurface(window);
     }
 

@@ -5,10 +5,16 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/")
 
 set(CMAKE_PREFIX_PATH)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
+add_executable(${PROJECT_NAME} 
+                src/main.cpp
+                src/cpu.cpp
+                src/display.cpp
+                src/emulator.cpp
+                src/memory.cpp
+                )
 
 find_package(SDL2 REQUIRED)
 
 include_directories(${PROJECT_NAME} ${SDL2_INCLUDE_DIR})
 
-target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY})      
+target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY})
