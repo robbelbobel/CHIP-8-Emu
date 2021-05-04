@@ -257,26 +257,26 @@ void CPU::execute(uint16_t instruction){
 
         // LD - Set I = location of sprite for digit Vx (Fx29)
         if((instruction & 0x00FF) == 0x0029){
-            CPU::I = (CPU::V[(instruction & 0x0F00) >> 8] * 0x5);
+            CPU::I = (CPU::V[(instruction & 0x0F00) >> 8] * 5);
             CPU::PC += 2; // Increment Program Counter
         }
 
         // LD - Store BCD representation of Vx in memory locations I, I+1, and I+2 (Fx33)
         if((instruction & 0x00FF) == 0x0033){
             // TO BE ADDED
-            CPU::PC += 2; // Increment Program Counter
+            // CPU::PC += 2; // Increment Program Counter
         }
 
         // LD - Store registers V0 through Vx in memory starting at location I (Fx55)
         if((instruction & 0x00FF) == 0x0055){
             // TO BE ADDED
-            CPU::PC += 2; // Increment Program Counter
+            // CPU::PC += 2; // Increment Program Counter
         }
 
         // LD - Read registers V0 through Vx from memory starting at location I (Fx65)
         if((instruction & 0x00FF) == 0x0065){
             // TO BE ADDED
-            CPU::PC += 2; // Increment Program Counter
+            // CPU::PC += 2; // Increment Program Counter
         }
     }
 }
@@ -306,10 +306,10 @@ void CPU::step(){
     char signByte   = CPU::memory -> map[CPU::PC];     // Significant Byte
     char insignByte = CPU::memory -> map[CPU::PC + 1]; // Insignificant Byte
 
-    uint16_t instruction = (signByte << 8) + insignByte; // Combine Bytes To 2 Byte Instruction
+    uint16_t instruction = (((uint16_t) signByte) << 8) + insignByte; // Combine Bytes To 2 Byte Instruction
 
     // Print PC And Instruction 
-    // std::cout << "PC: " << CPU::PC << " instruction: " << std::hex << instruction << std::endl;
+    std::cout << "PC: " << CPU::PC - 0x200 << " instruction: " << std::hex << instruction << std::endl;
     CPU::execute(instruction); // Execute Instruction
 }
 

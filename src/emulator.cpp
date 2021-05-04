@@ -29,8 +29,8 @@ Emulator::Emulator(unsigned int speed, SDL_Window* window){
 
 void Emulator::draw(){
     // Get Window Dimensions
-    int windowWidth  = 0;
-    int windowHeight = 0;
+    int windowWidth;
+    int windowHeight;
     SDL_GetWindowSize(Emulator::window, &windowWidth, &windowHeight);
 
     // Get Window Surface
@@ -40,12 +40,15 @@ void Emulator::draw(){
     pixel.w = windowWidth / 64;
     pixel.h = windowHeight / 32;
     
-    for(unsigned int i = 0; i < 32; i++){
+    for(int i = 0; i < 32; i++){
         pixel.y = i * pixel.h;
-        for(unsigned int j = 0; j < 64; j++){
-            pixel.x = j * pixel.w;
-            if(((Emulator::display -> pixelData[i] & (0b1 << j)) >> j) == 1){
+        for(int j = 64; j >= 0; j--){
+            pixel.x = (64 - j) * pixel.w;
+
+            if(((Emulator::display -> pixelData[i] & (((uint64_t) 0b1) << j)) >> j)){
                 SDL_FillRect(windowSurface, &pixel, SDL_MapRGBA(windowSurface -> format, Emulator::pixelLit.r, Emulator::pixelLit.g, Emulator::pixelLit.b, Emulator::pixelLit.a));
+            }else{
+                SDL_FillRect(windowSurface, &pixel, SDL_MapRGBA(windowSurface -> format, Emulator::pixelDim.r, Emulator::pixelDim.g, Emulator::pixelDim.b, Emulator::pixelDim.a));
             }
         }
     }
@@ -68,18 +71,6 @@ void Emulator::run(uint32_t DTime){
     }
 
     Emulator::draw(); // Draw Display To Window
-
-    // Print Display Pixel Data
-    for (unsigned int i = 0; i < 32; i++) {
-        for (unsigned int j = 0; j < 64; j++) {
-            char byte = (Emulator::display -> pixelData[i] >> j) & 1;
-            printf("%u", byte);
-        }
-
-        std::cout << std::endl;
-    }
-    
-    std::cout << std::endl << std::endl;
 }
 
 bool Emulator::loadGame(const char* path){
@@ -108,6 +99,13 @@ bool Emulator::loadGame(const char* path){
 
         Emulator::cpu     -> reset();   // Reset Processor
         Emulator::display -> clear();   // Clear Display
+
+        std::cout << "Memory Dump: " << std::endl;
+        for(unsigned int i = 0; i < 4096; i++){
+            std::cout << std::hex << (unsigned int) Emulator::memory -> map[i];
+        }
+
+        std::cout << std::endl;
 
         return true;
     
