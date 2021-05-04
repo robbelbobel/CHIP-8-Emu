@@ -36,15 +36,25 @@ int main(){
     }
 
     // -----VARIABLES-----
-    Emulator emulator(EMULATION_SPEED);
-    bool running = true;
+    Emulator emulator(EMULATION_SPEED, window);
+    // Time
+    uint32_t oldTime = SDL_GetTicks();
+    uint32_t dTime = 0;
 
+    bool running = true;
     while(running){
+        // Update deltaTime
+        dTime = SDL_GetTicks() - oldTime;
+        oldTime = SDL_GetTicks();
+
         // Clear Screen
         SDL_FillRect(windowSurface, NULL, SDL_MapRGB(windowSurface -> format, 0x00, 0x00, 0x00));
 
         // Get Input
         getInput(running, emulator, window);
+
+        // Run Emulator
+        emulator.run(dTime);
 
         // Update Window
         SDL_UpdateWindowSurface(window);

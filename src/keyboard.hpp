@@ -1,3 +1,6 @@
+#ifndef keyboard_hpp
+#define keyboard_hpp
+
 #include <cstdint>
 
 class Keyboard{
@@ -9,3 +12,5 @@ public:
     bool isPressed(uint8_t Vx);
     uint8_t anyPressed();
 };
+
+#endif

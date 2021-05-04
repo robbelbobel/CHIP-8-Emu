@@ -1,7 +1,10 @@
+#ifndef cpu_hpp
+#define cpu_hpp
+
 #include <cstdint>
 #include <random>
+#include <iostream>
 
-#include "memory.hpp"
 #include "display.hpp"
 #include "keyboard.hpp"
 
@@ -31,6 +34,9 @@ public:
     // Public Functions
     CPU(Memory* memory, Display* display, Keyboard* keyboard);
 
+    void reset();
     void step();
     void decrementTimers();
 };
+
+#endif
