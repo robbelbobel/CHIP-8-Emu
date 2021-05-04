@@ -5,8 +5,11 @@
 
 #define EMULATION_SPEED 500 // Emulation Speed In Hz
 
+// Global Variables
+char keyMap[16] = {SDL_SCANCODE_X, SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_A, SDL_SCANCODE_Z, SDL_SCANCODE_E, SDL_SCANCODE_Q, SDL_SCANCODE_S, SDL_SCANCODE_D, SDLK_w, SDL_SCANCODE_C, SDL_SCANCODE_4, SDL_SCANCODE_R, SDL_SCANCODE_F, SDL_SCANCODE_V};
+
 // Function Declarations
-void getInput(bool &running);
+void getInput(bool &running, Emulator &emulator, SDL_Window* window);
 
 int main(){
     // -----INITIALIZE-----
@@ -41,7 +44,7 @@ int main(){
         SDL_FillRect(windowSurface, NULL, SDL_MapRGB(windowSurface -> format, 0x00, 0x00, 0x00));
 
         // Get Input
-        getInput(running);
+        getInput(running, emulator, window);
 
         // Update Window
         SDL_UpdateWindowSurface(window);
@@ -52,9 +55,8 @@ int main(){
     SDL_Quit();
 }
 
-void getInput(bool &running){
+void getInput(bool &running, Emulator &emulator, SDL_Window* window){
     SDL_Event e;
-
     while(SDL_PollEvent(&e) != 0){
         if(e.type == SDL_QUIT){
             running = false;
@@ -67,5 +69,19 @@ void getInput(bool &running){
                     break;
             }
         }
+
+        if(e.type == SDL_DROPFILE){
+            if(!emulator.loadGame(e.drop.file)){
+                SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "Couldn't load your CHIP-8 ROM!", window);
+            }
+        }
+    }
+
+    // Get Key States
+    const uint8_t *state = SDL_GetKeyboardState(NULL);
+
+    // Set Keyboard Keys
+    for(unsigned int i = 0; i < 16; i++){
+        emulator.keyboard -> pressedKeys[i] = state[keyMap[i]];
     }
 }

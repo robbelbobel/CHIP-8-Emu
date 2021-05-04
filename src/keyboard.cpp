@@ -5,6 +5,6 @@ bool Keyboard::isPressed(uint8_t Vx){
     return false;
 }
 
-uint8_t anyPressed(){
+uint8_t Keyboard::anyPressed(){
     return 0x10;
 }
