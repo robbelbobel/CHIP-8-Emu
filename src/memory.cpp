@@ -2,7 +2,7 @@
 #include "memory.hpp"
 
 Memory::Memory(){
-    char characters[] = {               // CHIP-8 Character Array
+    uint8_t characters[] = {               // CHIP-8 Character Array
         0xF0, 0x90, 0x90, 0x90, 0xF0,   // 0
         0x20, 0x60, 0x20, 0x20, 0x70,   // 1
         0xF0, 0x10, 0xF0, 0x80, 0xF0,   // 2

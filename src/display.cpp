@@ -13,7 +13,7 @@ void Display::clear(){
     std::cout << "Cleared!" << std::endl;
 }
 
-bool Display::drawSprite(uint16_t I, uint8_t Vx, uint8_t Vy, char n){
+bool Display::drawSprite(uint16_t I, uint8_t Vx, uint8_t Vy, uint8_t n){
     // Draw Sprite
     for(unsigned int i = 0; i < n; i++){
         Display::pixelData[Vy + i] = ((((uint64_t) Display::memory -> map[I + i])) << (56 - Vx));

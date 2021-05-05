@@ -16,7 +16,7 @@ public:
     // Public Class Functions
     Display(Memory* memory);
     void clear();
-    bool drawSprite(uint16_t I, uint8_t Vx, uint8_t Vy, char n);
+    bool drawSprite(uint16_t I, uint8_t Vx, uint8_t Vy, uint8_t n);
 };
 
 #endif

@@ -87,13 +87,7 @@ bool Emulator::loadGame(const char* path){
         int size = end - beg;
 
         // Read Game Data
-        char gameData[size];
-        gameStream.read(gameData, size);
-
-        // Load Game Data Into Memory
-        for(unsigned int i = 0; i < size; i++){
-            Emulator::memory -> map[0x200 + i] = (uint8_t) gameData[i];
-        }
+        gameStream.read(&Emulator::memory -> map[0x200], size);
 
         gameStream.close();
 
@@ -102,7 +96,7 @@ bool Emulator::loadGame(const char* path){
 
         std::cout << "Memory Dump: " << std::endl;
         for(unsigned int i = 0; i < 4096; i++){
-            std::cout << std::hex << (unsigned int) Emulator::memory -> map[i];
+            printf("%x", Emulator::memory -> map[i]);
         }
 
         std::cout << std::endl;

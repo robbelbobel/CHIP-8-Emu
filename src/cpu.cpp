@@ -191,7 +191,7 @@ void CPU::execute(uint16_t instruction){
 
     // RND - Set Set Vx = random byte AND kk (Cxkk)
     if((instruction & 0xF000) == 0xC000){
-        char random = rand() % 256;
+        uint8_t random = rand() % 256;
         CPU::V[(instruction & 0x0F00) >> 8] = random & (instruction & 0x00FF);
         CPU::PC += 2; // Increment Program Counter
     }
@@ -303,8 +303,8 @@ void CPU::reset(){
 
 void CPU::step(){
     // Fetch Instruction
-    char signByte   = CPU::memory -> map[CPU::PC];     // Significant Byte
-    char insignByte = CPU::memory -> map[CPU::PC + 1]; // Insignificant Byte
+    uint8_t signByte   = CPU::memory -> map[CPU::PC];     // Significant Byte
+    uint8_t insignByte = CPU::memory -> map[CPU::PC + 1]; // Insignificant Byte
 
     uint16_t instruction = (((uint16_t) signByte) << 8) + insignByte; // Combine Bytes To 2 Byte Instruction
 
