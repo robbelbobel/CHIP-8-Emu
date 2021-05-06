@@ -7,16 +7,49 @@ Display::Display(Memory* memory){
 
 void Display::clear(){
     for(unsigned int i = 0; i < 32; i++){
-        Display::pixelData[i] = 0;
+        for(unsigned int j = 0; j < 64; j++){
+            Display::pixelData[i][j] = 0x0;
+        }
     }
-
-    std::cout << "Cleared!" << std::endl;
 }
 
 bool Display::drawSprite(uint16_t I, uint8_t Vx, uint8_t Vy, uint8_t n){
+    bool collided = false;
+
     // Draw Sprite
     for(unsigned int i = 0; i < n; i++){
-        Display::pixelData[Vy + i] = ((((uint64_t) Display::memory -> map[I + i])) << (56 - Vx));
+        for(unsigned int j = 0; j < 8; j++){
+            bool pixelState = Display::pixelData[Vy + i][Vx + j];
+            Display::pixelData[Vy + i][Vx + j] ^= (((uint64_t) Display::memory -> map[I + i]) >> (8 - j)) & 0b1;
+            if(Display::pixelData[Vy + i][Vx + j] != pixelState) collided = true;
+        }
     }
-    return false;
+    return collided;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Display::pixelData[Vy + i] ^= (((uint64_t) Display::memory -> map[I + i]) << (56 - Vx));

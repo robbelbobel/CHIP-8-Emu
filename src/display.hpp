@@ -11,7 +11,7 @@ private:
     Memory* memory;
 public:
     // Screen Size 64x32 (w: 64 (8 * 8 bytes), h: 32)
-    uint64_t pixelData[32];
+    uint8_t pixelData[32][64];
 
     // Public Class Functions
     Display(Memory* memory);

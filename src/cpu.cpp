@@ -20,6 +20,7 @@ void CPU::execute(uint16_t instruction){
     if(instruction == 0x00E0){
         CPU::display -> clear();
         CPU::PC += 2; // Increment Program Counter
+        return;
     }
 
     // RET - Return From Subroutine
@@ -30,7 +31,7 @@ void CPU::execute(uint16_t instruction){
 
     // JP - Jump To Address
     if((instruction & 0xF000) == 0x1000){
-        CPU::PC = instruction & 0x0FFF;
+        CPU::PC = (instruction & 0x0FFF);
     }
 
     // CALL - Call Subroutine
@@ -61,7 +62,9 @@ void CPU::execute(uint16_t instruction){
     // SE - Skip Next Instruction if Vx = Vy (5xy0)
     if((instruction & 0xF000) == 0x5000){
         if((CPU::V[(instruction & 0x0F00)] >> 8) == (CPU::V[(instruction & 0x00F0)] >> 4)){
-            CPU::PC += 4;
+            CPU::PC += 2;
+        }else{
+            CPU::PC += 2;
         }
     }
 
@@ -169,6 +172,7 @@ void CPU::execute(uint16_t instruction){
             CPU::PC += 2; // Increment Program Counter
         }
     }
+
 
     // SNE - Skip next instruction if Vx != Vy (9xy0)
     if((instruction & 0xF000) == 0x9000){
@@ -309,7 +313,7 @@ void CPU::step(){
     uint16_t instruction = (((uint16_t) signByte) << 8) + insignByte; // Combine Bytes To 2 Byte Instruction
 
     // Print PC And Instruction 
-    std::cout << "PC: " << CPU::PC - 0x200 << " instruction: " << std::hex << instruction << std::endl;
+    // std::cout << "PC: " << CPU::PC - 0x200 << " instruction: " << std::hex << instruction << std::endl;
     CPU::execute(instruction); // Execute Instruction
 }
 

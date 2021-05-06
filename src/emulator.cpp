@@ -39,16 +39,16 @@ void Emulator::draw(){
     SDL_Rect pixel;
     pixel.w = windowWidth / 64;
     pixel.h = windowHeight / 32;
-    
+
     for(int i = 0; i < 32; i++){
         pixel.y = i * pixel.h;
-        for(int j = 64; j >= 0; j--){
-            pixel.x = (64 - j) * pixel.w;
+        for(int j = 0; j < 64; j++){
+            pixel.x = j * pixel.w;
 
-            if(((Emulator::display -> pixelData[i] & (((uint64_t) 0b1) << j)) >> j)){
-                SDL_FillRect(windowSurface, &pixel, SDL_MapRGBA(windowSurface -> format, Emulator::pixelLit.r, Emulator::pixelLit.g, Emulator::pixelLit.b, Emulator::pixelLit.a));
+            if(Emulator::display -> pixelData[i][j] == 0x1){
+                SDL_FillRect(windowSurface, &pixel, SDL_MapRGB(windowSurface -> format, Emulator::pixelLit.r, Emulator::pixelLit.g, Emulator::pixelLit.b));
             }else{
-                SDL_FillRect(windowSurface, &pixel, SDL_MapRGBA(windowSurface -> format, Emulator::pixelDim.r, Emulator::pixelDim.g, Emulator::pixelDim.b, Emulator::pixelDim.a));
+                SDL_FillRect(windowSurface, &pixel, SDL_MapRGB(windowSurface -> format, Emulator::pixelDim.r, Emulator::pixelDim.g, Emulator::pixelDim.b));
             }
         }
     }
@@ -84,23 +84,15 @@ bool Emulator::loadGame(const char* path){
         gameStream.seekg(0, std::ios::beg);        
         int beg = gameStream.tellg();
 
-        int size = end - beg;
+        int size = end - beg; // Calculate Game File Length
 
         // Read Game Data
         gameStream.read(&Emulator::memory -> map[0x200], size);
 
-        gameStream.close();
+        gameStream.close(); // Close Game Data Stream
 
         Emulator::cpu     -> reset();   // Reset Processor
         Emulator::display -> clear();   // Clear Display
-
-        std::cout << "Memory Dump: " << std::endl;
-        for(unsigned int i = 0; i < 4096; i++){
-            printf("%x", Emulator::memory -> map[i]);
-        }
-
-        std::cout << std::endl;
-
         return true;
     
     }else{

@@ -1,2 +1,3 @@
 # TO DO
-* Fix File Reading
+* Reimplement display drawing
+* Finish opcodes

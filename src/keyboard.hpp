@@ -2,6 +2,7 @@
 #define keyboard_hpp
 
 #include <cstdint>
+#include <iostream>
 
 class Keyboard{
 public:
