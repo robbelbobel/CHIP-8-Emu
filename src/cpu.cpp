@@ -27,6 +27,8 @@ void CPU::execute(uint16_t instruction){
     if(instruction == 0x00EE){
          CPU::PC = CPU::stack[CPU::SP];
          CPU::SP -= 1;
+
+         CPU::PC += 2; // Increment Program Counter
     }
 
     // JP - Jump To Address
@@ -39,6 +41,8 @@ void CPU::execute(uint16_t instruction){
         CPU::SP++;
         CPU::stack[CPU::SP] = CPU::PC;
         CPU::PC = (instruction & 0x0FFF);
+
+        std::cout << "Added to stack! Stack entry: " << CPU::stack[CPU::SP] << std::endl;
     }
 
     // SE - Skip next instruction if Vx = kk (3xkk)
@@ -273,16 +277,22 @@ void CPU::execute(uint16_t instruction){
 
         // LD - Store registers V0 through Vx in memory starting at location I (Fx55)
         if((instruction & 0x00FF) == 0x0055){
-            // TO BE ADDED
-            // CPU::PC += 2; // Increment Program Counter
+            for(unsigned int i = 0; i < ((instruction & 0x0F00) >> 8); i++){
+                CPU::memory -> map[CPU::I + i] = CPU::V[i];
+            }
+            
+            CPU::PC += 2; // Increment Program Counter
         }
 
         // LD - Read registers V0 through Vx from memory starting at location I (Fx65)
         if((instruction & 0x00FF) == 0x0065){
-            // TO BE ADDED
-            // CPU::PC += 2; // Increment Program Counter
+            for(unsigned int i = 0; i < ((instruction & 0x0F00) >> 8); i++){
+                CPU::V[i] = CPU::memory -> map[CPU::I + I];
+            }
+
+            CPU::PC += 2; // Increment Program Counter
         }
-    }
+    }   
 }
 
 void CPU::reset(){
@@ -313,7 +323,7 @@ void CPU::step(){
     uint16_t instruction = (((uint16_t) signByte) << 8) + insignByte; // Combine Bytes To 2 Byte Instruction
 
     // Print PC And Instruction 
-    // std::cout << "PC: " << CPU::PC - 0x200 << " instruction: " << std::hex << instruction << std::endl;
+    std::cout << "PC: " << CPU::PC << " instruction: " << std::hex << instruction << std::endl;
     CPU::execute(instruction); // Execute Instruction
 }
 
