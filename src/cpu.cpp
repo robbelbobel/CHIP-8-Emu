@@ -41,8 +41,6 @@ void CPU::execute(uint16_t instruction){
         CPU::SP++;
         CPU::stack[CPU::SP] = CPU::PC;
         CPU::PC = (instruction & 0x0FFF);
-
-        std::cout << "Added to stack! Stack entry: " << CPU::stack[CPU::SP] << std::endl;
     }
 
     // SE - Skip next instruction if Vx = kk (3xkk)
