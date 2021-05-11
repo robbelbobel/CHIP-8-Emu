@@ -63,6 +63,7 @@ void Emulator::draw(){
 void Emulator::run(uint32_t DTime){
     Emulator::stepTimeCounter  += DTime;
     Emulator::timerTimeCounter += DTime;
+
     // Check StepTimeCounter
     if(Emulator::stepTimeCounter >= (1000.0f / Emulator::speed)){
         Emulator::cpu -> step();

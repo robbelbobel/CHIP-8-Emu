@@ -16,7 +16,7 @@ class Emulator{
         SDL_Window* window;
         
         unsigned int speed;
-        
+
         bool exit;
 
         SDL_Color pixelLit;
