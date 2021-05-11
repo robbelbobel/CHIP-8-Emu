@@ -36,6 +36,9 @@ void Emulator::draw(){
     // Get Window Surface
     SDL_Surface* windowSurface = SDL_GetWindowSurface(Emulator::window);
 
+    // Clear Screen
+    SDL_FillRect(windowSurface, NULL, SDL_MapRGB(windowSurface -> format, 0x00, 0x00, 0x00));
+
     SDL_Rect pixel;
     pixel.w = windowWidth / 64;
     pixel.h = windowHeight / 32;
@@ -52,25 +55,27 @@ void Emulator::draw(){
             }
         }
     }
+
+    // Update Window
+    SDL_UpdateWindowSurface(window);
 }
 
 void Emulator::run(uint32_t DTime){
     Emulator::stepTimeCounter  += DTime;
     Emulator::timerTimeCounter += DTime;
-
     // Check StepTimeCounter
-    if(Emulator::stepTimeCounter >= (1000 / Emulator::speed)){
+    if(Emulator::stepTimeCounter >= (1000.0f / Emulator::speed)){
         Emulator::cpu -> step();
         Emulator::stepTimeCounter = 0;
     }
 
     // Check timerTimeCounter (Should Be Exectuted At 60Hz)
     if(Emulator::timerTimeCounter >= (17)){
-        Emulator::cpu -> decrementTimers(); // Decrement CPU Timers
-        Emulator::timerTimeCounter = 0;
-    }
+        Emulator::draw();   // Draw Screen 60 Times Per Second
 
-    Emulator::draw(); // Draw Display To Window
+        Emulator::cpu -> decrementTimers(); // Decrement CPU Timers
+        Emulator::timerTimeCounter = 0;     // Reset TimerTimeCounter
+    }
 }
 
 bool Emulator::loadGame(const char* path){

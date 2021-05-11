@@ -1,7 +1,7 @@
 #ifndef memory_hpp
 #define memory_hpp
 
-#include <vector>
+#include <fstream>
 
 class Memory{
 public:

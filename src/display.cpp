@@ -26,30 +26,3 @@ bool Display::drawSprite(uint16_t I, uint8_t Vx, uint8_t Vy, uint8_t n){
     }
     return collided;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Display::pixelData[Vy + i] ^= (((uint64_t) Display::memory -> map[I + i]) << (56 - Vx));

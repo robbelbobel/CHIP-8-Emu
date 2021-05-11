@@ -16,7 +16,7 @@ class Emulator{
         SDL_Window* window;
         
         unsigned int speed;
-
+        
         bool exit;
 
         SDL_Color pixelLit;
@@ -25,6 +25,7 @@ class Emulator{
         uint32_t stepTimeCounter;
         uint32_t timerTimeCounter;
 
+        // Private Class Functions
         void draw();
 
     public:
