@@ -326,7 +326,7 @@ void CPU::step(){
     uint16_t instruction = (((uint16_t) signByte) << 8) + insignByte; // Combine Bytes To 2 Byte Instruction
 
     // Print PC And Instruction 
-    // std::cout << "PC: " << CPU::PC << " instruction: " << std::hex << instruction << std::endl;
+    std::cout << "PC: " << CPU::PC << " instruction: " << std::hex << instruction << std::endl;
     CPU::execute(instruction); // Execute Instruction
 }
 
