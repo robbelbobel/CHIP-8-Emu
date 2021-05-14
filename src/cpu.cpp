@@ -65,9 +65,9 @@ void CPU::execute(uint16_t instruction){
     else if((instruction & 0xF000) == 0x5000){
         if((CPU::V[(instruction & 0x0F00)] >> 8) == (CPU::V[(instruction & 0x00F0)] >> 4)){
             CPU::PC += 2;
-        }else{
-            CPU::PC += 2;
         }
+
+        CPU::PC += 2;
     }
 
     // LD - Set Vx == kk (6xkk)
@@ -85,13 +85,16 @@ void CPU::execute(uint16_t instruction){
     else if((instruction & 0xF000) == 0x8000){
         // LD - Set Vx = Vy (8xy0)
         if((instruction & 0x000F) == 0x0000){
-            CPU::V[(instruction & 0x0F00) >> 8] = CPU::V[(instruction & 0x00F0 >> 4)];
+
+            CPU::V[(instruction & 0x0F00) >> 8] = CPU::V[(instruction & 0x00F0) >> 4];
+            std::cout << "8XY0" << std::endl;
             CPU::PC += 2; // Increment Program Counter
         }
 
         // OR - Set Vx = Vx OR Vy (8xy1)
         else if((instruction & 0x000F) == 0x0001){
             CPU::V[(instruction & 0x0F00) >> 8] = CPU::V[(instruction & 0x0F00) >> 8] | CPU::V[(instruction & 0x00F0) >> 4];
+            std::cout << "8XY1" << std::endl;
             CPU::PC += 2; // Increment Program Counter
         }
 
@@ -170,7 +173,7 @@ void CPU::execute(uint16_t instruction){
             }
 
             CPU::V[(instruction & 0x0F00) >> 8] *= 2;
-
+            
             CPU::PC += 2; // Increment Program Counter
         }
     }
@@ -280,7 +283,7 @@ void CPU::execute(uint16_t instruction){
 
         // LD - Store registers V0 through Vx in memory starting at location I (Fx55)
         else if((instruction & 0x00FF) == 0x0055){
-            for(unsigned int i = 0; i < ((instruction & 0x0F00) >> 8); i++){
+            for(unsigned int i = 0; i <= ((instruction & 0x0F00) >> 8); i++){
                 CPU::memory -> map[CPU::I + i] = CPU::V[i];
             }
             

@@ -4,4 +4,4 @@ The scope for this project is to learn about emulators and computer interfacing 
 It's not my goal to make this emulator as accurate as possible but any help would be appreciated!
 
 ## TO DO
-* Reimplement display drawing
+* Verify opcodes with test roms
