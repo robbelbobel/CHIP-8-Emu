@@ -57,4 +57,4 @@ The ROM can also be loaded by dragging and dropping the game in the window
 ## TO DO
 
 * Implement Audio
-* Code Cleanup and optimization 
+* Code Cleanup and optimization (Implement "switch-statement" instead of "if else")
