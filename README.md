@@ -43,6 +43,11 @@ make
 
 The emulator should be executed using the terminal with the following syntax:
 
+
+
+
+TYPE(NOOR IS COOL)
+
 ~~~
 ./CHIP-8 [OPTIONAL:ROMPATH]
 ~~~
@@ -52,4 +57,4 @@ The ROM can also be loaded by dragging and dropping the game in the window
 ## TO DO
 
 * Implement Audio
-* Code Cleanup and optimization
+* Code Cleanup and optimization 
