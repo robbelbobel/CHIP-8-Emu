@@ -16,18 +16,10 @@ void Display::clear(){
 bool Display::drawSprite(uint16_t I, uint8_t Vx, uint8_t Vy, uint8_t n){
     bool collided = false;
 
-    // std::cout << "I: " << std::hex << I << std::endl;
-
-    // for(unsigned int i = 0; i < n; i++){
-    //     std::cout << std::hex << (((int) Display::memory -> map[I + i]) & 0xFF) << std::endl;
-    // }
-
     // Draw Sprite
     for(unsigned int i = 0; i < n; i++){
         // Fetch Byte From Memory
         uint8_t spriteByte = Display::memory -> map[I + i];
-
-        printf( "%#x\n", spriteByte);
 
         for(unsigned int j = 0; j < 8; j++){
             bool pixelState = Display::pixelData[Vy + i][Vx + j];
@@ -38,8 +30,6 @@ bool Display::drawSprite(uint16_t I, uint8_t Vx, uint8_t Vy, uint8_t n){
             }
         }
     }
-
-    // while(true);
 
     return collided;
 }

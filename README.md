@@ -5,4 +5,4 @@ It's not my goal to make this emulator as accurate as possible but any help woul
 
 ## TO DO
 * Implement Audio
-* Fix Collisions
+* Code Cleanup and optimization

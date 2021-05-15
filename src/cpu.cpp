@@ -87,14 +87,12 @@ void CPU::execute(uint16_t instruction){
         if((instruction & 0x000F) == 0x0000){
 
             CPU::V[(instruction & 0x0F00) >> 8] = CPU::V[(instruction & 0x00F0) >> 4];
-            std::cout << "8XY0" << std::endl;
             CPU::PC += 2; // Increment Program Counter
         }
 
         // OR - Set Vx = Vx OR Vy (8xy1)
         else if((instruction & 0x000F) == 0x0001){
             CPU::V[(instruction & 0x0F00) >> 8] = CPU::V[(instruction & 0x0F00) >> 8] | CPU::V[(instruction & 0x00F0) >> 4];
-            std::cout << "8XY1" << std::endl;
             CPU::PC += 2; // Increment Program Counter
         }
 
@@ -133,12 +131,7 @@ void CPU::execute(uint16_t instruction){
                 CPU::V[0xF] = 0x0;
             }
 
-            std::cout << "SUBSTRACTION OLD: " << (int) CPU::V[(instruction & 0x0F00) >> 8] << std::endl;
-
             CPU::V[(instruction & 0x0F00) >> 8] -= CPU::V[(instruction & 0x00F0) >> 4];
-
-            std::cout << "SUBSTRACTION NEW: " << (int) CPU::V[(instruction & 0x0F00) >> 8] << std::endl;
-
             CPU::PC += 2; // Increment Program Counter
         }
 
@@ -210,7 +203,8 @@ void CPU::execute(uint16_t instruction){
         uint8_t Vx = CPU::V[(instruction & 0x0F00) >> 8];
         uint8_t Vy = CPU::V[(instruction & 0x00F0) >> 4];
 
-        CPU::display -> drawSprite(CPU::I, Vx, Vy, instruction & 0x000F);
+        CPU::V[0xF] = CPU::display -> drawSprite(CPU::I, Vx, Vy, instruction & 0x000F);
+        
         CPU::PC += 2; // Increment Program Counter
     }
 
@@ -280,8 +274,6 @@ void CPU::execute(uint16_t instruction){
             uint8_t tens = (num / 10) % 10;
             uint8_t ones = num % 10;
 
-            std::cout << "I: " << CPU::I << ", Num: " << (int) num << ", h: " << (int) hundreds << ", t: " << (int) tens << ", o: " << (int) ones << std::endl;
-
             CPU::memory -> map[I]     = hundreds;   // Hundreds
             CPU::memory -> map[I + 1] = tens;       // Tens
             CPU::memory -> map[I + 2] = ones;       // Ones
@@ -339,7 +331,7 @@ void CPU::step(){
     uint16_t instruction = (((uint16_t) signByte) << 8) + insignByte; // Combine Bytes To 2 Byte Instruction
 
     // Print PC And Instruction 
-    std::cout << "PC: " << CPU::PC << " instruction: " << std::hex << instruction << std::endl;
+    // std::cout << "PC: " << CPU::PC << " instruction: " << std::hex << instruction << std::endl;
     CPU::execute(instruction); // Execute Instruction
 }
 
