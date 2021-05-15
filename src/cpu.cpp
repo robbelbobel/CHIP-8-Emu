@@ -63,7 +63,7 @@ void CPU::execute(uint16_t instruction){
 
     // SE - Skip Next Instruction if Vx = Vy (5xy0)
     else if((instruction & 0xF000) == 0x5000){
-        if((CPU::V[(instruction & 0x0F00)] >> 8) == (CPU::V[(instruction & 0x00F0)] >> 4)){
+        if((CPU::V[(instruction & 0x0F00)>> 8]) == (CPU::V[(instruction & 0x00F0) >> 4])){
             CPU::PC += 2;
         }
 
@@ -127,13 +127,17 @@ void CPU::execute(uint16_t instruction){
 
         // SUB - Set Vx = Vx - Vy, set VF = NOT borrow (8xy5)
         else if((instruction & 0x000F) == 0x0005){
-            if(CPU::V[(instruction & 0x0F00) >> 8] > V[(instruction & 0x00F0) >> 4]){
-                CPU::V[0XF] = 0x1;
+            if(CPU::V[(instruction & 0x0F00) >> 8] >= V[(instruction & 0x00F0) >> 4]){
+                CPU::V[0xF] = 0x1;
             }else{
                 CPU::V[0xF] = 0x0;
             }
 
+            std::cout << "SUBSTRACTION OLD: " << (int) CPU::V[(instruction & 0x0F00) >> 8] << std::endl;
+
             CPU::V[(instruction & 0x0F00) >> 8] -= CPU::V[(instruction & 0x00F0) >> 4];
+
+            std::cout << "SUBSTRACTION NEW: " << (int) CPU::V[(instruction & 0x0F00) >> 8] << std::endl;
 
             CPU::PC += 2; // Increment Program Counter
         }
@@ -166,13 +170,9 @@ void CPU::execute(uint16_t instruction){
 
         // SHL - Set Vx = Vx SHL 1 (8xyE)
         else if((instruction & 0x000F) == 0x000E){
-            if(((CPU::V[(instruction & 0x0F00) >> 8] & 0b1000000000000000) >> 16) == 0x01){
-                CPU::V[0xF] = 0x01;
-            }else{
-                CPU::V[0xF] = 0x00;
-            }
-
-            CPU::V[(instruction & 0x0F00) >> 8] *= 2;
+            CPU::V[0xF] = (CPU::V[(instruction & 0x0F00) >> 8] >> 7);
+            
+            CPU::V[(instruction & 0x0F00) >> 8] = CPU::V[(instruction & 0x0F00) >> 8] << 1;
             
             CPU::PC += 2; // Increment Program Counter
         }
@@ -274,9 +274,17 @@ void CPU::execute(uint16_t instruction){
         else if((instruction & 0x00FF) == 0x0033){
             uint8_t num = CPU::V[(instruction & 0x0F00) >> 8];
             
-            CPU::memory -> map[I]     = (num / 100) % 10;   // Hundreds
-            CPU::memory -> map[I + 1] = (num / 10) % 10;    // Tens
-            CPU::memory -> map[I + 2] = num % 10;           // Ones
+            uint8_t hundreds = (num / 100) % 10;
+            uint8_t tens = (num / 10) % 10;
+            uint8_t ones = num % 10;
+
+            std::cout << "I: " << CPU::I << ", Num: " << (int) num << ", h: " << (int) hundreds << ", t: " << (int) tens << ", o: " << (int) ones << std::endl;
+
+            CPU::memory -> map[I]     = hundreds;   // Hundreds
+            CPU::memory -> map[I + 1] = tens;       // Tens
+            CPU::memory -> map[I + 2] = ones;       // Ones
+
+            CPU::memory -> dump();
 
             CPU::PC += 2; // Increment Program Counter
         }
@@ -292,8 +300,8 @@ void CPU::execute(uint16_t instruction){
 
         // LD - Read registers V0 through Vx from memory starting at location I (Fx65)
         else if((instruction & 0x00FF) == 0x0065){
-            for(unsigned int i = 0; i < ((instruction & 0x0F00) >> 8); i++){
-                CPU::V[i] = CPU::memory -> map[CPU::I + I];
+            for(unsigned int i = 0; i <= ((instruction & 0x0F00) >> 8); i++){
+                CPU::V[i] = CPU::memory -> map[CPU::I + i];
             }
 
             CPU::PC += 2; // Increment Program Counter

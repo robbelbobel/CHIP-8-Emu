@@ -7,8 +7,8 @@ class Memory{
 public:
     Memory();
 
-    char map[4096]; // Memory Map (Array) (Code starts at 0x200)
-    
+    uint8_t map[4096]; // Memory Map (Array) (Code starts at 0x200)
+    void dump();
 };
 
 #endif

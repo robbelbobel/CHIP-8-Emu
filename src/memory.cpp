@@ -27,11 +27,13 @@ Memory::Memory(){
             Memory::map[(i * 5) + j] = symbols[i][j];
         }
     }
+}
 
-    // // Dump Memory
-    // std::ofstream dumpStream;
-    // dumpStream.open("dump.bin", std::ios::binary | std::ios::out);
-    // dumpStream.seekp(0, std::ios::beg);
-    // dumpStream.write((char*) symbols, 16 * 5);
-    // dumpStream.close();
+void Memory::dump(){
+    // Dump Memory
+    std::ofstream dumpStream;
+    dumpStream.open("dump.bin", std::ios::binary | std::ios::out);
+    dumpStream.seekp(0, std::ios::beg);
+    dumpStream.write((char*) Memory::map, 4096);
+    dumpStream.close();
 }

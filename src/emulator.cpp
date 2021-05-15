@@ -39,9 +39,18 @@ void Emulator::draw(){
     // Clear Screen
     SDL_FillRect(windowSurface, NULL, SDL_MapRGB(windowSurface -> format, 0x00, 0x00, 0x00));
 
+    // Calculate Pixel Size
     SDL_Rect pixel;
     pixel.w = windowWidth / 64;
     pixel.h = windowHeight / 32;
+
+    if((windowWidth / 64) >= (windowHeight / 32)){
+        pixel.h = windowHeight / 32;
+        pixel.w = pixel.h;
+    }else{
+        pixel.w = windowWidth / 64;
+        pixel.h = pixel.w;
+    }
 
     for(int i = 0; i < 32; i++){
         pixel.y = i * pixel.h;
@@ -92,10 +101,17 @@ bool Emulator::loadGame(const char* path){
 
         int size = end - beg; // Calculate Game File Length
 
+        char gameData[size];
+
         // Read Game Data
-        gameStream.read(&Emulator::memory -> map[0x200], size);
+        gameStream.read(gameData, size);
 
         gameStream.close(); // Close Game Data Stream
+        
+        // Load Game Data Into Memory
+        for(unsigned int i = 0; i < size; i++){
+            Emulator::memory -> map[0x200 + i] = (uint8_t) gameData[i];
+        }
 
         Emulator::cpu     -> reset();   // Reset Processor
         Emulator::display -> clear();   // Clear Display
