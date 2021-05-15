@@ -86,6 +86,11 @@ void Emulator::run(uint32_t DTime){
         Emulator::cpu -> decrementTimers(); // Decrement CPU Timers
         Emulator::timerTimeCounter = 0;     // Reset TimerTimeCounter
     }
+
+    // Play Sound If Sound Timer Is Not Zero
+    if(Emulator::cpu -> ST != 0){
+        std::cout << "BEEP" << std::endl;
+    }
 }
 
 bool Emulator::loadGame(const char* path){

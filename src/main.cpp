@@ -3,7 +3,7 @@
 
 #include "emulator.hpp"
 
-#define EMULATION_SPEED 500 // Emulation Speed In Hz
+#define EMULATION_SPEED 700 // Emulation Speed In Hz
 
 // Global Variables
 uint8_t keyMap[16] = {SDL_SCANCODE_X, SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCODE_3, SDL_SCANCODE_Q, SDL_SCANCODE_W, SDL_SCANCODE_E, SDL_SCANCODE_A, SDL_SCANCODE_S, SDL_SCANCODE_D, SDL_SCANCODE_Z, SDL_SCANCODE_C, SDL_SCANCODE_4, SDL_SCANCODE_R, SDL_SCANCODE_F, SDL_SCANCODE_V};
@@ -11,7 +11,7 @@ uint8_t keyMap[16] = {SDL_SCANCODE_X, SDL_SCANCODE_1, SDL_SCANCODE_2, SDL_SCANCO
 // Function Declarations
 void getInput(bool &running, Emulator &emulator, SDL_Window* window);
 
-int main(){
+int main(int argc, char** argv){
     // -----INITIALIZE-----
     // SDL
     if(SDL_Init(SDL_INIT_VIDEO) < 0){
@@ -40,6 +40,11 @@ int main(){
     // Time
     uint32_t oldTime = SDL_GetTicks();
     uint32_t dTime = 0;
+
+    // Check For Command Line Arguments
+    if(argc > 1){
+        emulator.loadGame(argv[1]);
+    }
 
     bool running = true;
     while(running){

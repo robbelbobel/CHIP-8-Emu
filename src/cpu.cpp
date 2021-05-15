@@ -200,10 +200,7 @@ void CPU::execute(uint16_t instruction){
 
     // DRW - Display n-byte sprite starting at memory location I at (Vx, Vy), set VF = collision (Dxyn)
     else if((instruction & 0xF000) == 0xD000){
-        uint8_t Vx = CPU::V[(instruction & 0x0F00) >> 8];
-        uint8_t Vy = CPU::V[(instruction & 0x00F0) >> 4];
-
-        CPU::V[0xF] = CPU::display -> drawSprite(CPU::I, Vx, Vy, instruction & 0x000F);
+        CPU::V[0xF] = CPU::display -> drawSprite(CPU::I, CPU::V[(instruction & 0x0F00) >> 8], CPU::V[(instruction & 0x00F0) >> 4], instruction & 0x000F);
         
         CPU::PC += 2; // Increment Program Counter
     }
@@ -268,17 +265,9 @@ void CPU::execute(uint16_t instruction){
 
         // LD - Store BCD representation of Vx in memory locations I, I+1, and I+2 (Fx33)
         else if((instruction & 0x00FF) == 0x0033){
-            uint8_t num = CPU::V[(instruction & 0x0F00) >> 8];
-            
-            uint8_t hundreds = (num / 100) % 10;
-            uint8_t tens = (num / 10) % 10;
-            uint8_t ones = num % 10;
-
-            CPU::memory -> map[I]     = hundreds;   // Hundreds
-            CPU::memory -> map[I + 1] = tens;       // Tens
-            CPU::memory -> map[I + 2] = ones;       // Ones
-
-            CPU::memory -> dump();
+            CPU::memory -> map[I]     = (CPU::V[(instruction & 0x0F00) >> 8] / 100) % 10;   // Hundreds
+            CPU::memory -> map[I + 1] = (CPU::V[(instruction & 0x0F00) >> 8] / 10) % 10;       // Tens
+            CPU::memory -> map[I + 2] = CPU::V[(instruction & 0x0F00) >> 8] % 10;       // Ones
 
             CPU::PC += 2; // Increment Program Counter
         }
