@@ -218,15 +218,17 @@ void CPU::execute(uint16_t instruction){
         // SKP - Skip next instruction if key with the value of Vx is pressed (Ex9E)
         if((instruction & 0x00FF) == 0x009E){
             if(CPU::keyboard -> isPressed(CPU::V[(instruction & 0x0F00) >> 8])){
-                CPU::PC += 4;
+                CPU::PC += 2;
             }
+            CPU::PC += 2;
         }
 
         // SKNP - Skip next instruction if key with the value of Vx is not pressed (ExA1)
         else if((instruction & 0x00FF) == 0x00A1){
             if(!(CPU::keyboard -> isPressed(CPU::V[(instruction & 0x0F00) >> 8]))){
-                CPU::PC += 4;
+                CPU::PC += 2;
             }
+            CPU::PC += 2;
         }
     }
 
