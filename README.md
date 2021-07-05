@@ -43,11 +43,6 @@ make
 
 The emulator should be executed using the terminal with the following syntax:
 
-
-
-
-TYPE(NOOR IS COOL)
-
 ~~~
 ./CHIP-8 [OPTIONAL:ROMPATH]
 ~~~
